@@ -1,7 +1,7 @@
 ﻿namespace CONTROLLER;
 using System.IO.Compression;
 
-public class CompressionServices
+public static class CompressionServices
 {
     public static void Zip(string sourceDirPath, string destFilePath)
     {

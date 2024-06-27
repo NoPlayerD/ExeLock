@@ -27,8 +27,6 @@ public static class EncryptionServices
                 keyBytes = ASCIIEncoding.UTF8.GetBytes(key);
                 initialisationVectorBytes = ASCIIEncoding.UTF8.GetBytes(initialisationVector);
 
-                Console.WriteLine($"{key} - {initialisationVector}");
-
                 using (FileStream outputFileStream = new FileStream(outputFile, FileMode.Create))
                 {
                     using (ICryptoTransform encryptor = aes.CreateEncryptor(keyBytes, initialisationVectorBytes))

@@ -1,4 +1,7 @@
 /CONTROLLER/bin
 /CONTROLLER/obj
 
+/SERVER/bin
+/SERVER/obj
+
 *.sln
