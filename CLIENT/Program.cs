@@ -1,15 +1,26 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
+using CONTROLLER;
 using Microsoft.VisualBasic;
 
 Random RND = new Random();
 string BASE = AppDomain.CurrentDomain.BaseDirectory;
 
+
+Console.WriteLine("Enter your key: ");
+var key = Console.ReadLine();
+
+Console.WriteLine("Enter your iv (initialisation vector): ");
+var iv = Console.ReadLine();
+
+
 var cache = CreateCache();
 Directory.CreateDirectory(cache);
 
-RUN(ExtractedFile(ExportedZip()));
+try{RUN(DecryptedFile(ExtractedFile(ExportedZip())));}
+catch(Exception ex){};
+
 
 
 
@@ -37,6 +48,15 @@ string ExtractedFile(string zip)
     return myFile;
 }
 
+string DecryptedFile(string file)
+{
+    string myFile = Path.Combine(cache,$"{Path.GetFileNameWithoutExtension(file)} [ue]{Path.GetExtension(file)}");
+    EncryptionServices.DecryptFile(file, myFile, key, iv);
+    File.Delete(file);
+
+    return myFile;
+}
+
 string CreateCache()
 {
     string TEMP = RND.Next(999999999).ToString();
@@ -53,6 +73,9 @@ void RUN (string what)
     pi.FileName = what;
     var p = new Process();
     p.StartInfo = pi;
+    
+    Console.WriteLine("Running '{0}'",Path.GetFileName(pi.FileName));
+
     p.Start();
     p.WaitForExit();
 }

@@ -89,7 +89,7 @@ void StartDialouge(bool isEncrypting)
         if(isEncrypting)
         {
             Encrypt(INPUT,CACHED,PASS,IV);
-            string MYZIP = Path.Combine(OUTPUT, $"{MYNAME}.zip");
+            string MYZIP = Path.Combine(OUTPUT, "archive.zip");
             Zip(CACHE,MYZIP);
         }
         else
