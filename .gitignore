@@ -4,4 +4,8 @@
 /SERVER/bin
 /SERVER/obj
 
+/CLIENT/bin
+/CLIENT/obj
+
 *.sln
+*.zip
