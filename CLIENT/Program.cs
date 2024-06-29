@@ -18,34 +18,21 @@ var iv = Console.ReadLine();
 var cache = CreateCache();
 Directory.CreateDirectory(cache);
 
-try{RUN(DecryptedFile(ExtractedFile(ExportedZip())));}
-catch(Exception ex){};
+try{RUN(DecryptedFile(ExtractedFile()));}
+catch(Exception ex){Console.WriteLine(ex.Message.ToString());Console.ReadLine();};
 
 
 
 
-string ExportedZip()
+string ExtractedFile()
 {
-    string myfile =$"{cache}/cache.zip";
-    
     using(var  res = Assembly.GetExecutingAssembly().GetManifestResourceStream(Assembly.GetExecutingAssembly().GetManifestResourceNames()[0]))
     {
-    using (Stream st = new FileStream(myfile ,FileMode.Create))
-    {
-        res.CopyTo(st);
-    }
+    ZipFile.ExtractToDirectory(res,cache);
     }
 
+    string myfile =Directory.GetFiles(cache)[0];
     return myfile;
-}
-
-string ExtractedFile(string zip)
-{
-    ZipFile.ExtractToDirectory(zip,cache);
-    File.Delete(zip);
-    string myFile = Directory.GetFiles(cache)[0];
-
-    return myFile;
 }
 
 string DecryptedFile(string file)

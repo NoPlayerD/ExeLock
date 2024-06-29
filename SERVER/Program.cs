@@ -111,14 +111,15 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
             string MYZIP = Path.Combine(CACHE2PATH, "archive.zip");
             Zip(CACHE1PATH,MYZIP);
             
-            File.Move(MYZIP,$"{outputP}/{RemoveExtension(GetName(inputP))} [E].zip");
-            Directory.Delete(CACHE2PATH);
-
             // ========================================
 
             string client = CreateCache();
             ExportCLIENT(client);
-            string myArg = "build";
+            File.Delete($"{client}/CLIENT/.source/archive.zip");
+            
+            File.Move(MYZIP,$"{client}/CLIENT/.source/archive.zip");
+            Directory.Delete(CACHE2PATH, true);
+            string myArg = "publish";
             
             var p = new Process();
             var pi = new ProcessStartInfo();
@@ -128,6 +129,12 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
             
             p.StartInfo = pi;
             p.Start();
+            p.WaitForExit();
+
+            string startLine = $"{client}/CLIENT/bin/Release/net8.0/";
+            File.Move($"{Directory.GetDirectories(startLine)[0]}/publish/CLIENT.exe",$"{outputP}/CLIENT.exe");
+            Directory.Delete(client,true);
+
         }
         else
         {
