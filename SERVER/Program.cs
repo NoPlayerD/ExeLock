@@ -1,12 +1,15 @@
 ﻿#region GLOBAL
 
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using CONTROLLER;
+
 
 var Zip = CompressionServices.Zip;
 var Unzip = CompressionServices.Unzip;
@@ -91,12 +94,11 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
         // short name of the input file (name)
         
         string CACHE1PATH = CreateCache();
-        Directory.CreateDirectory(CACHE1PATH);
         // create the first cache dir
 
         string CACHE2PATH ="null";
         if (isEncrypting)
-        {CACHE2PATH  = CreateCache(); Directory.CreateDirectory(CACHE2PATH);}
+        {CACHE2PATH  = CreateCache();}
         // Create the second cache (if encrypting)
 
         string CACHEDFILE = Path.Combine(CACHE1PATH,isEncrypting ? FULLNAME : SHORTNAME+".exe");
@@ -111,6 +113,21 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
             
             File.Move(MYZIP,$"{outputP}/{RemoveExtension(GetName(inputP))} [E].zip");
             Directory.Delete(CACHE2PATH);
+
+            // ========================================
+
+            string client = CreateCache();
+            ExportCLIENT(client);
+            string myArg = "build";
+            
+            var p = new Process();
+            var pi = new ProcessStartInfo();
+            pi.FileName = "dotnet.exe";
+            pi.WorkingDirectory = $"{client}/CLIENT";
+            pi.Arguments = myArg;
+            
+            p.StartInfo = pi;
+            p.Start();
         }
         else
         {
@@ -123,13 +140,27 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
     Directory.Delete(CACHE1PATH,true);
 }
 
+void ExportCLIENT(string where)
+{
+    // Get the assembly and the resource name
+    using(var  res = Assembly.GetExecutingAssembly().GetManifestResourceStream(Assembly.GetExecutingAssembly().GetManifestResourceNames()[0]))
+    {
+        ZipFile.ExtractToDirectory(res,where);
+    /*using (Stream st = new FileStream("arch.zip",FileMode.Create))
+    {
+        res.CopyTo(st);
+    }*/
+    }
+}
+
 string CreateCache()
 {
     string TEMP = RND.Next(999999999).ToString();
     string PATH = Path.Combine(BASE,"Cache",TEMP);
 
     if (Directory.Exists(PATH))  {PATH = CreateCache();}
-
+    else {Directory.CreateDirectory(PATH);}
+    
     return PATH;
 }
 
