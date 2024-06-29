@@ -79,29 +79,48 @@ void StartDialouge(bool isEncrypting)
 
 // ========================================
 
-        string MYFULLNAME = GetName(INPUT);
-        string MYNAME = RemoveExtension(MYFULLNAME);
-        
-        string CACHE = CreateCache();
-        Directory.CreateDirectory(CACHE);
-        string CACHED = Path.Combine(CACHE,isEncrypting ? MYFULLNAME : MYNAME+".exe");
+    ManageActions(INPUT,OUTPUT,PASS, IV, isEncrypting);
+}
 
-        if(isEncrypting)
+void ManageActions(string inputP, string outputP, string key, string iv, bool isEncrypting)
+{
+#region Variables
+        string FULLNAME = GetName(inputP);
+        // full name of the input file (name + extension)
+        string SHORTNAME = RemoveExtension(FULLNAME);
+        // short name of the input file (name)
+        
+        string CACHE1PATH = CreateCache();
+        Directory.CreateDirectory(CACHE1PATH);
+        // create the first cache dir
+
+        string CACHE2PATH ="null";
+        if (isEncrypting)
+        {CACHE2PATH  = CreateCache(); Directory.CreateDirectory(CACHE2PATH);}
+        // Create the second cache (if encrypting)
+
+        string CACHEDFILE = Path.Combine(CACHE1PATH,isEncrypting ? FULLNAME : SHORTNAME+".exe");
+        // get the path of file that is inside cache
+#endregion
+
+    if(isEncrypting)
         {
-            Encrypt(INPUT,CACHED,PASS,IV);
-            string MYZIP = Path.Combine(OUTPUT, "archive.zip");
-            Zip(CACHE,MYZIP);
+            Encrypt(inputP,CACHEDFILE,key,iv);
+            string MYZIP = Path.Combine(CACHE2PATH, "archive.zip");
+            Zip(CACHE1PATH,MYZIP);
+            
+            File.Move(MYZIP,$"{outputP}/{RemoveExtension(GetName(inputP))} [E].zip");
+            Directory.Delete(CACHE2PATH);
         }
         else
         {
-            Unzip(INPUT,CACHE);
-            string MYEXE = Path.Combine(OUTPUT, $"{MYNAME}.exe");
-            Decrypt(CACHED,MYEXE,PASS,IV);
+            Unzip(inputP,CACHE1PATH);
+            string MYEXE = Path.Combine(outputP, Directory.GetFiles(CACHE1PATH, "*.exe")[0]); // $"{SHORTNAME}.exe");
+            Decrypt(CACHEDFILE,MYEXE,key,iv);
         }
 
-        File.Delete(CACHED);
-        Directory.Delete(CACHE,true);
-
+    File.Delete(CACHEDFILE);
+    Directory.Delete(CACHE1PATH,true);
 }
 
 string CreateCache()

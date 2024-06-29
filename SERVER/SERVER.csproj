@@ -8,5 +8,6 @@
   </PropertyGroup>
 <ItemGroup>
          <ProjectReference Include = "..\CONTROLLER\CONTROLLER.csproj" />
+         <EmbeddedResource Include=".source\CLIENT.zip"/>
 </ItemGroup>
 </Project>
