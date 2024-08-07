@@ -1,9 +1,9 @@
 ### building:
 
-1. build controller
+1. build 'controller'
 2. create a folder named '.source' in 'CLIENT'
-3. create a file named 'archive.zip' (it's extension must be 'zip') in '.source'
-4. add compiled 'CONTROLLER.dll' to '.source'
+3. create a file named 'archive.zip' (it's extension must be 'zip') in the '.source'
+4. copy compiled 'CONTROLLER.dll' to '.source'
 5. build 'CLIENT'
 6. create an archive of 'CLIENT' (must be zip archive)
 7. create a folder named '.source' in 'SERVER'
