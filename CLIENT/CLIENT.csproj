@@ -10,6 +10,8 @@
   </PropertyGroup>
 <ItemGroup>
   <EmbeddedResource Include=".source\archive.zip" />
-  <ProjectReference Include = "..\CONTROLLER\CONTROLLER.csproj" />
+  <Reference Include="CONTROLLER">
+       <HintPath>.source\CONTROLLER.dll</HintPath>
+  </Reference>
 </ItemGroup>
 </Project>
