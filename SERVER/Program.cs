@@ -115,7 +115,7 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
 
             string client = CreateCache();
             ExportCLIENT(client);
-            File.Delete($"{client}/CLIENT/.source/archive.zip");
+            FileShredder.ShredFile($"{client}/CLIENT/.source/archive.zip");
             
             File.Move(MYZIP,$"{client}/CLIENT/.source/archive.zip");
             Directory.Delete(CACHE2PATH, true);
@@ -143,7 +143,7 @@ void ManageActions(string inputP, string outputP, string key, string iv, bool is
             Decrypt(CACHEDFILE,MYEXE,key,iv);
         }
 
-    File.Delete(CACHEDFILE);
+    FileShredder.ShredFile(CACHEDFILE);
     Directory.Delete(CACHE1PATH,true);
 }
 

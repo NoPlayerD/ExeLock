@@ -3,6 +3,8 @@ using System.IO.Compression;
 using System.Reflection;
 using CONTROLLER;
 using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.FileIO;
+
 
 Random RND = new Random();
 string BASE = AppDomain.CurrentDomain.BaseDirectory;
@@ -67,5 +69,10 @@ void RUN (string what)
     p.WaitForExit();
 }
 
-Directory.Delete(cache,true);
+foreach (string my in Directory.GetFiles(cache,"",searchOption: System.IO.SearchOption.AllDirectories))
+{
+    FileShredder.ShredFile(my);
+    Console.WriteLine($"'{my}' file shredded");
+}
 
+Directory.Delete(cache,true);
